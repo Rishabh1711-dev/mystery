@@ -16,24 +16,28 @@ export async function GET(request: Request) {
       { status: 401 }
     );
   }
+  
   const userId = new mongoose.Types.ObjectId(_user._id);
+  
   try {
-    const user = await UserModel.findById(userId);
+    const user = await UserModel.aggregate([
+      { $match: { _id: userId } },
+      { $unwind: '$messages' },
+      { $sort: { 'messages.createdAt': -1 } },
+      { $group: { _id: '$_id', messages: { $push: '$messages' } } },
+    ]);
 
-    if (!user) {
+    if (!user || user.length === 0) {
       return Response.json(
-        { message: 'User not found', success: false },
-        { status: 404 }
+        { messages: [] },
+        {
+          status: 200,
+        }
       );
     }
 
-    // Sort messages in descending order of createdAt
-    const sortedMessages = user.messages.sort(
-      (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-    );
-
     return Response.json(
-      { messages: sortedMessages },
+      { messages: user[0].messages },
       {
         status: 200,
       }
