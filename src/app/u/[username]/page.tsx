@@ -32,7 +32,7 @@ const parseStringMessages = (messageString: string): string[] => {
 };
 
 const initialMessageString =
-  "What's your favorite movie?||Do you have any pets?||What's your dream job?";
+  "I still have feelings for my ex.||I lied on my resume to get my current job.||I'm secretly a huge fan of a band everyone else hates.";
 
 export default function SendMessage() {
   const params = useParams<{ username: string }>();
@@ -78,7 +78,7 @@ export default function SendMessage() {
       toast({
         title: 'Error',
         description:
-          axiosError.response?.data.message ?? 'Failed to sent message',
+          axiosError.response?.data.message ?? 'Failed to send confession',
         variant: 'destructive',
       });
     } finally {
@@ -88,17 +88,32 @@ export default function SendMessage() {
 
   const fetchSuggestedMessages = async () => {
     try {
-      complete('');
+      await complete('');
     } catch (error) {
       console.error('Error fetching messages:', error);
-      // Handle error appropriately
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch suggested confessions.',
+        variant: 'destructive',
+      });
     }
   };
+
+  React.useEffect(() => {
+    if (error) {
+      console.error('Error from useCompletion hook:', error);
+      toast({
+        title: 'Error generating suggestions',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  }, [error, toast]);
 
   return (
     <div className="container mx-auto my-8 p-6 bg-white rounded max-w-4xl">
       <h1 className="text-4xl font-bold mb-6 text-center">
-        Public Profile Link
+        Make a Confession
       </h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -107,10 +122,10 @@ export default function SendMessage() {
             name="content"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Send Anonymous Message to @{username}</FormLabel>
+                <FormLabel>Send an anonymous confession to @{username}</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Write your anonymous message here"
+                    placeholder="Write your confession here"
                     className="resize-none"
                     {...field}
                   />
@@ -127,7 +142,7 @@ export default function SendMessage() {
               </Button>
             ) : (
               <Button type="submit" disabled={isLoading || !messageContent}>
-                Send It
+                Send Confession
               </Button>
             )}
           </div>
@@ -141,13 +156,13 @@ export default function SendMessage() {
             className="my-4"
             disabled={isSuggestLoading}
           >
-            Suggest Messages
+            Suggest a Confession
           </Button>
-          <p>Click on any message below to select it.</p>
+          <p>Click on any confession below to select it.</p>
         </div>
         <Card>
           <CardHeader>
-            <h3 className="text-xl font-semibold">Messages</h3>
+            <h3 className="text-xl font-semibold">Example Confessions</h3>
           </CardHeader>
           <CardContent className="flex flex-col space-y-4">
             {error ? (
@@ -169,7 +184,7 @@ export default function SendMessage() {
       </div>
       <Separator className="my-6" />
       <div className="text-center">
-        <div className="mb-4">Get Your Message Board</div>
+        <div className="mb-4">Get Your Own Confession Board</div>
         <Link href={'/sign-up'}>
           <Button>Create Your Account</Button>
         </Link>

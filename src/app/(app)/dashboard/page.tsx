@@ -15,6 +15,7 @@ import { useSession } from 'next-auth/react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { AcceptMessageSchema } from '@/schemas/acceptMessageSchema';
+import Link from 'next/link';
 
 function UserDashboard() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -64,8 +65,8 @@ function UserDashboard() {
         setMessages(response.data.messages || []);
         if (refresh) {
           toast({
-            title: 'Refreshed Messages',
-            description: 'Showing latest messages',
+            title: 'Refreshed Confessions',
+            description: 'Showing latest confessions',
           });
         }
       } catch (error) {
@@ -73,7 +74,7 @@ function UserDashboard() {
         toast({
           title: 'Error',
           description:
-            axiosError.response?.data.message ?? 'Failed to fetch messages',
+            axiosError.response?.data.message ?? 'Failed to fetch confessions',
           variant: 'destructive',
         });
       } finally {
@@ -84,16 +85,13 @@ function UserDashboard() {
     [setIsLoading, setMessages, toast]
   );
 
-  // Fetch initial state from the server
   useEffect(() => {
     if (!session || !session.user) return;
 
     fetchMessages();
-
     fetchAcceptMessages();
   }, [session, setValue, toast, fetchAcceptMessages, fetchMessages]);
 
-  // Handle switch change
   const handleSwitchChange = async () => {
     try {
       const response = await axios.post<ApiResponse>('/api/accept-messages', {
@@ -117,77 +115,88 @@ function UserDashboard() {
   };
 
   if (!session || !session.user) {
-    return <div></div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-white" />
+      </div>
+    );
   }
 
   const { username } = session.user as User;
 
-  const baseUrl = `${window.location.protocol}//${window.location.host}`;
+  const baseUrl = typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.host}` : '';
   const profileUrl = `${baseUrl}/u/${username}`;
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(profileUrl);
-    toast({
-      title: 'URL Copied!',
-      description: 'Profile URL has been copied to clipboard.',
-    });
-  };
-
   return (
-    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
+    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-gray-900/90 text-white rounded-lg shadow-lg w-full max-w-6xl">
       <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
 
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{' '}
-        <div className="flex items-center">
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold mb-2">Your Public Confession Link</h2>
+        <div className="flex items-center gap-4">
           <input
             type="text"
             value={profileUrl}
             disabled
-            className="input input-bordered w-full p-2 mr-2"
+            className="input input-bordered w-full p-2 bg-gray-800 text-gray-200 border-gray-700 rounded-md"
           />
-          <Button onClick={copyToClipboard}>Copy</Button>
+          <Link href={profileUrl} passHref>
+            <Button className="bg-purple-600 hover:bg-purple-700">View Page</Button>
+          </Link>
         </div>
       </div>
 
-      <div className="mb-4">
-        <Switch
-          {...register('acceptMessages')}
-          checked={acceptMessages}
-          onCheckedChange={handleSwitchChange}
-          disabled={isSwitchLoading}
-        />
-        <span className="ml-2">
-          Accept Messages: {acceptMessages ? 'On' : 'Off'}
-        </span>
+      <div className="mb-6">
+        <div className="flex items-center space-x-2">
+          <Switch
+            {...register('acceptMessages')}
+            checked={acceptMessages}
+            onCheckedChange={handleSwitchChange}
+            disabled={isSwitchLoading}
+            id="accept-messages"
+          />
+          <label htmlFor="accept-messages" className="text-sm">
+            Accept Confessions: {acceptMessages ? 'On' : 'Off'}
+          </label>
+        </div>
       </div>
-      <Separator />
+      <Separator className="bg-gray-700" />
 
-      <Button
-        className="mt-4"
-        variant="outline"
-        onClick={(e) => {
-          e.preventDefault();
-          fetchMessages(true);
-        }}
-      >
-        {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <RefreshCcw className="h-4 w-4" />
-        )}
-      </Button>
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="mt-6 flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Your Confessions</h2>
+        <Button
+          variant="outline"
+          className="border-gray-600 text-white hover:bg-gray-700 hover:text-white"
+          onClick={(e) => {
+            e.preventDefault();
+            fetchMessages(true);
+          }}
+        >
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <>
+              <RefreshCcw className="h-4 w-4 mr-2" />
+              Refresh
+            </>
+          )}
+        </Button>
+      </div>
+      
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {messages.length > 0 ? (
-          messages.map((message, index) => (
+          messages.map((message) => (
             <MessageCard
-              key={message._id}
+              key={message._id as string}
               message={message}
               onMessageDelete={handleDeleteMessage}
             />
           ))
         ) : (
-          <p>No messages to display.</p>
+          <div className="text-center col-span-2 text-gray-400 mt-8">
+            <p>You have no confessions yet.</p>
+            <p className="mt-2">Share your link to start receiving anonymous feedback!</p>
+          </div>
         )}
       </div>
     </div>

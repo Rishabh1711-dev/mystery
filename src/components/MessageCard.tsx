@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React from 'react';
 import axios, { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 import { X } from 'lucide-react';
@@ -31,13 +31,16 @@ export function MessageCard({ message, onMessageDelete }: MessageCardProps) {
 
   const handleDeleteConfirm = async () => {
     try {
+      if (!message._id) {
+        throw new Error("Message ID is not defined");
+      }
       const response = await axios.delete<ApiResponse>(
         `/api/delete-message/${message._id}`
       );
       toast({
         title: response.data.message,
       });
-      onMessageDelete(message._id);
+      onMessageDelete(message._id.toString());
 
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -47,18 +50,23 @@ export function MessageCard({ message, onMessageDelete }: MessageCardProps) {
           axiosError.response?.data.message ?? 'Failed to delete message',
         variant: 'destructive',
       });
-    } 
+    }
   };
 
   return (
-    <Card className="card-bordered">
+    <Card className="card-bordered bg-gray-800 border-gray-700 text-white">
       <CardHeader>
-        <div className="flex justify-between items-center">
-          <CardTitle>{message.content}</CardTitle>
+        <div className="flex justify-between items-start">
+          <div className="flex-grow">
+            <CardTitle className="text-lg font-normal mb-2">{message.content}</CardTitle>
+            <p className="text-xs text-gray-400">
+              {dayjs(message.createdAt).format('MMM D, YYYY h:mm A')}
+            </p>
+          </div>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant='destructive'>
-                <X className="w-5 h-5" />
+              <Button variant='destructive' size="icon" className="w-8 h-8">
+                <X className="w-4 h-4" />
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -66,7 +74,7 @@ export function MessageCard({ message, onMessageDelete }: MessageCardProps) {
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This action cannot be undone. This will permanently delete
-                  this message.
+                  this confession.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -80,11 +88,7 @@ export function MessageCard({ message, onMessageDelete }: MessageCardProps) {
             </AlertDialogContent>
           </AlertDialog>
         </div>
-        <div className="text-sm">
-          {dayjs(message.createdAt).format('MMM D, YYYY h:mm A')}
-        </div>
       </CardHeader>
-      <CardContent></CardContent>
     </Card>
   );
 }
