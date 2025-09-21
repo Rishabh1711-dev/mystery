@@ -30,8 +30,10 @@ export function NavbarDemo() {
   const user: User | undefined = session?.user;
 
   const navItems = [
-    { name: "My Confessions", link: "/confessions" },
-    { name: "Responses", link: "/responses" },
+    { name: "My Confessions", link: "/dashboard" },
+    { name: "About Us", link: "/about" },
+    { name: "Community Guidelines", link: "/community-guidelines" },
+    { name: "Contact Us", link: "/contact" },
   ];
 
   return (
@@ -109,14 +111,6 @@ export function NavbarDemo() {
                   Login
                 </NavbarButton>
               )}
-              <NavbarButton
-                href="/book-call"
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-              >
-                Book a call
-              </NavbarButton>
             </div>
           </MobileNavMenu>
         </MobileNav>

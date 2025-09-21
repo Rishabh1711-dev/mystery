@@ -9,7 +9,7 @@ import { Message } from '@/model/User';
 import { ApiResponse } from '@/types/ApiResponse';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
-import { Loader2, RefreshCcw } from 'lucide-react';
+import { Loader2, RefreshCcw, QrCode } from 'lucide-react';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -143,6 +143,15 @@ function UserDashboard() {
           <Link href={profileUrl} passHref>
             <Button className="bg-purple-600 hover:bg-purple-700">View Page</Button>
           </Link>
+          <Button
+            className="bg-gray-700 hover:bg-gray-600"
+            onClick={() => {
+              // TODO: Implement QR code modal
+              alert('QR Code feature coming soon!');
+            }}
+          >
+            <QrCode className="h-5 w-5" />
+          </Button>
         </div>
       </div>
 
@@ -182,7 +191,7 @@ function UserDashboard() {
           )}
         </Button>
       </div>
-      
+
       <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {messages.length > 0 ? (
           messages.map((message) => (
@@ -198,6 +207,15 @@ function UserDashboard() {
             <p className="mt-2">Share your link to start receiving anonymous feedback!</p>
           </div>
         )}
+      </div>
+
+      <Separator className="my-12 bg-gray-700" />
+
+      <div className="mt-6">
+        <h2 className="text-2xl font-bold mb-4">Message History</h2>
+        <p className="text-gray-400">
+          This feature is coming soon! You will be able to view a history of all the confessions you have received.
+        </p>
       </div>
     </div>
   );

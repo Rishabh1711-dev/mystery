@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Autoplay from 'embla-carousel-autoplay';
 import messages from '@/messages.json';
-import { Mail, Users, Share2 } from 'lucide-react';
+import { Mail, Users, Share2, Heart, Lock, Zap } from 'lucide-react';
 
 import {
   Carousel,
@@ -14,6 +14,24 @@ import {
 import Link from 'next/link';
 
 export default function Home() {
+  const featuredConfessions = [
+    {
+      title: "A Secret Dream",
+      content: "I've always wanted to be a painter, but I'm an accountant. My family would never understand.",
+      received: "2 days ago"
+    },
+    {
+      title: "An Unspoken Crush",
+      content: "I have a crush on my best friend, but I'm too scared to tell them and risk our friendship.",
+      received: "1 week ago"
+    },
+    {
+      title: "A Hidden Talent",
+      content: "I can speak three languages fluently, but I've never told anyone because I'm shy about it.",
+      received: "3 hours ago"
+    }
+  ];
+
   return (
     <>
       <div className="w-full max-w-7xl mx-auto px-4 md:px-24 py-12 text-white">
@@ -52,6 +70,33 @@ export default function Home() {
         </Carousel>
       </div>
 
+      {/* Featured Confessions Section */}
+      <section className="py-16 md:py-20 bg-gray-900 w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
+              Featured Confessions
+            </h2>
+            <p className="mt-4 text-lg text-gray-300">
+              A glimpse into the hearts and minds of our community.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {featuredConfessions.map((confession, index) => (
+              <Card key={index} className="bg-gray-800/70 border-gray-700 text-white">
+                <CardHeader>
+                  <CardTitle>{confession.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>{confession.content}</p>
+                  <p className="text-xs text-gray-400 mt-4">{confession.received}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* How It Works Section */}
       <section className="py-16 md:py-20 bg-gray-900/50 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -89,6 +134,49 @@ export default function Home() {
               <h3 className="text-xl font-bold text-white">Receive Confessions</h3>
               <p className="mt-2 text-base text-gray-400">
                 Receive anonymous confessions from others on your private dashboard.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Why Choose Unspoken Section */}
+      <section className="py-16 md:py-20 w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
+              Why Choose Unspoken?
+            </h2>
+            <p className="mt-4 text-lg text-gray-300">
+              A safe, anonymous, and judgment-free space for your thoughts.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="flex flex-col items-center text-center">
+              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-purple-600 text-white mb-4">
+                <Lock className="h-8 w-8" />
+              </div>
+              <h3 className="text-xl font-bold text-white">Complete Anonymity</h3>
+              <p className="mt-2 text-base text-gray-400">
+                Your identity is always protected. Share without fear.
+              </p>
+            </div>
+            <div className="flex flex-col items-center text-center">
+              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-purple-600 text-white mb-4">
+                <Heart className="h-8 w-8" />
+              </div>
+              <h3 className="text-xl font-bold text-white">Supportive Community</h3>
+              <p className="mt-2 text-base text-gray-400">
+                Join a community that listens and supports.
+              </p>
+            </div>
+            <div className="flex flex-col items-center text-center">
+              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-purple-600 text-white mb-4">
+                <Zap className="h-8 w-8" />
+              </div>
+              <h3 className="text-xl font-bold text-white">Fast and Easy</h3>
+              <p className="mt-2 text-base text-gray-400">
+                Start sharing and receiving confessions in minutes.
               </p>
             </div>
           </div>
