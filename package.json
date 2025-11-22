@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.1.1",
+    "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^3.3.3",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.1.10",
@@ -22,7 +22,7 @@
     "@react-email/components": "0.0.12",
     "@react-email/render": "^0.0.9-canary.2",
     "@tabler/icons-react": "^3.35.0",
-    "ai": "^2.2.37",
+    "ai": "^5.0.99",
     "axios": "^1.6.3",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
@@ -35,7 +35,8 @@
     "motion": "^12.23.13",
     "next": "^14.2.32",
     "next-auth": "^4.24.5",
-    "openai": "^4.104.0",
+    "nodemon": "^3.1.11",
+    "openai": "^6.9.1",
     "react": "^18",
     "react-dom": "^18",
     "react-email": "^4.2.11",
