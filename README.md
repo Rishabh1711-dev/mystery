@@ -1,3 +1,50 @@
+# Unspoken (Mystery Message)
+
+**Unspoken** is an anonymous messaging platform that allows users to send and receive candid feedback, confessions, and questions without revealing their identity. Built with privacy and user experience in mind, it leverages AI to help users break the ice and foster open communication.
+
+## 🚀 Features
+
+* **Anonymous Messaging:** Users can sign up to receive anonymous messages from anyone via a unique public link.
+* **AI-Powered Suggestions:** Integrated with **Google Gemini AI** to suggest creative and unique message ideas for senders.
+* **User Dashboard:** A personal dashboard to view, manage, and delete received messages.
+* **Toggle Message Acceptance:** Users can easily enable or disable receiving new messages at any time.
+* **Secure Authentication:** robust sign-up and sign-in system using **NextAuth.js**, complete with email verification (OTP).
+* **Responsive UI:** A modern, mobile-first interface built with **Tailwind CSS** and **Shadcn UI**.
+
+## 🛠️ Tech Stack
+
+* **Framework:** [Next.js 14](https://nextjs.org/) (App Router)
+* **Language:** [TypeScript](https://www.typescriptlang.org/)
+* **Database:** [MongoDB](https://www.mongodb.com/) (via Mongoose)
+* **Authentication:** [NextAuth.js](https://next-auth.js.org/)
+* **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+* **UI Components:** [Shadcn UI](https://ui.shadcn.com/) & [Framer Motion](https://www.framer.com/motion/)
+* **AI Integration:** [Google Generative AI (Gemini)](https://ai.google.dev/)
+* **Email Service:** [Resend](https://resend.com/) & [React Email](https://react.email/)
+* **Form Handling:** React Hook Form & Zod
+
+## ⚙️ Environment Variables
+
+To run this project locally, you will need to add the following environment variables to your `.env` file in the root directory:
+
+```env
+# Database Connection
+MONGODB_URI=your_mongodb_connection_string
+
+# NextAuth Configuration
+NEXTAUTH_SECRET=your_nextauth_secret_key
+NEXTAUTH_URL=http://localhost:3000
+
+# API Keys
+RESEND_API_KEY=your_resend_api_key
+GEMINI_API_KEY=your_google_gemini_api_key
+
+# Email Configuration
+# Note: Ensure this email is verified in your Resend dashboard
+FROM_EMAIL=onboarding@resend.dev
+
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
