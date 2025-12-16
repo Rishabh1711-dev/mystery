@@ -1,39 +1,28 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAIStream, StreamingTextResponse } from 'ai';
+
+export const runtime = 'edge';
 
 export async function POST(req: Request) {
   try {
-    const { userMessage } = await req.json();
+    const { prompt } = await req.json(); // useCompletion sends 'prompt', not 'userMessage'
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-    // Use a correct valid model
-    const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
-    });
-
-    // Ask for confession suggestions
-    const prompt = `
-You are an AI that generates short confession-style message suggestions.
-Generate 5 unique confession suggestions based on this message:
-
-"${userMessage}"
-
-Respond ONLY with the list, no explanations.
+    const promptText = `
+      Create 3 open-ended, interesting questions for an anonymous message board. 
+      Separate them by '||'. 
+      Do not use numbers or introductions. 
+      Example: What is your biggest fear?||Who is your secret crush?||What is a lie you told recently?
     `;
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const geminiStream = await model.generateContentStream(promptText);
+    const stream = GoogleGenerativeAIStream(geminiStream);
 
-    return new Response(JSON.stringify({ suggestions: text }), {
-      headers: { "Content-Type": "application/json" },
-      status: 200,
-    });
-
-  } catch (err: any) {
-    console.error("Error:", err);
-    return new Response(
-      JSON.stringify({ error: err.message || "Unknown error" }),
-      { status: 500 }
-    );
+    return new StreamingTextResponse(stream);
+  } catch (error) {
+    console.error("Service Error:", error);
+    return Response.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
