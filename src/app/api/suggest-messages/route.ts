@@ -1,28 +1,66 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { GoogleGenerativeAIStream, StreamingTextResponse } from 'ai';
+export const runtime = 'nodejs';
 
-export const runtime = 'edge';
-
-export async function POST(req: Request) {
+export async function POST() {
   try {
-    const { prompt } = await req.json(); // useCompletion sends 'prompt', not 'userMessage'
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: 'user',
+              parts: [
+                {
+                  text: `
+Generate EXACTLY 3 safe, friendly, open-ended questions
+for a general anonymous discussion board.
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+Rules:
+- Each question must be a complete sentence
+- Separate questions using ONLY "||"
+- No numbering
+- No sensitive or adult topics
 
-    const promptText = `
-      Create 3 open-ended, interesting questions for an anonymous message board. 
-      Separate them by '||'. 
-      Do not use numbers or introductions. 
-      Example: What is your biggest fear?||Who is your secret crush?||What is a lie you told recently?
-    `;
+Format:
+Question one || Question two || Question three
+                  `,
+                },
+              ],
+            },
+          ],
+          generationConfig: {
+            temperature: 0.9,
+            maxOutputTokens: 200,
+          },
+        }),
+      }
+    );
 
-    const geminiStream = await model.generateContentStream(promptText);
-    const stream = GoogleGenerativeAIStream(geminiStream);
+    const data = await res.json();
 
-    return new StreamingTextResponse(stream);
-  } catch (error) {
-    console.error("Service Error:", error);
-    return Response.json({ error: 'Internal Server Error' }, { status: 500 });
+    console.log('Gemini raw response:', JSON.stringify(data, null, 2));
+
+    const text =
+      data?.candidates?.[0]?.content?.parts
+        ?.map((p: any) => p.text)
+        .join('')
+        .trim() || '';
+
+    if (!text) {
+      return Response.json({
+        suggestions:
+          'What is something that made you smile today? || What is a goal you are quietly working toward? || What is a habit you want to build this year?',
+      });
+    }
+
+    return Response.json({ suggestions: text });
+  } catch (err) {
+    console.error(err);
+    return Response.json(
+      { error: 'Gemini failed' },
+      { status: 500 }
+    );
   }
 }

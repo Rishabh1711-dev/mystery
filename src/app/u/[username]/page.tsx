@@ -156,7 +156,7 @@ export default function SendMessage() {
             className="my-4"
             disabled={isSuggestLoading}
           >
-            Suggest a Confession
+            Suggest Confession Using Gemini
           </Button>
           <p>Click on any confession below to select it.</p>
         </div>
