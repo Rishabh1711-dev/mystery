@@ -12,7 +12,7 @@ import {
   CarouselItem,
 } from '@/components/ui/carousel';
 import Link from 'next/link';
-
+export const dynamic = 'force-dynamic';
 export default function Home() {
   const featuredConfessions = [
     {

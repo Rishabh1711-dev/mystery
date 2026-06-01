@@ -24,7 +24,7 @@ import { ApiResponse } from '@/types/ApiResponse';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { messageSchema } from '@/schemas/messageSchema';
-
+export const dynamic = 'force-dynamic';
 const specialChar = '||';
 
 const parseStringMessages = (messageString: string): string[] => {

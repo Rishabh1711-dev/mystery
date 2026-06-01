@@ -3,7 +3,7 @@ import { authOptions } from '../auth/[...nextauth]/options';
 import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/model/User';
 import { User } from 'next-auth';
-
+export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
   // Connect to the database
   await dbConnect();
