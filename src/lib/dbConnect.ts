@@ -13,9 +13,14 @@ async function dbConnect(): Promise<void> {
     return;
   }
 
+  // ADD THIS CHECK: Throw an error immediately if the variable is missing
+  if (!process.env.MONGODB_URI) {
+    throw new Error('Please define the MONGODB_URI environment variable');
+  }
+
   try {
-    // Attempt to connect to the database
-    const db = await mongoose.connect(process.env.MONGODB_URI || '', {});
+    // Attempt to connect to the database (no longer needs the || '' fallback)
+    const db = await mongoose.connect(process.env.MONGODB_URI, {});
 
     connection.isConnected = db.connections[0].readyState;
 
