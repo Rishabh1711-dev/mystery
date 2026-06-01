@@ -10,6 +10,23 @@
 * **Toggle Message Acceptance:** Users can easily enable or disable receiving new messages at any time.
 * **Secure Authentication:** robust sign-up and sign-in system using **NextAuth.js**, complete with email verification (OTP).
 * **Responsive UI:** A modern, mobile-first interface built with **Tailwind CSS** and **Shadcn UI**.
+## ☁️ Deployment
+
+Melody Mastery is production-ready and deployed on **Amazon Web Services (AWS)**, leveraging cloud infrastructure for scalability, reliability, and high availability.
+
+### Deployment Highlights
+
+* Hosted on **AWS EC2**
+* Secure production environment configuration
+* Optimized build and deployment workflow for Next.js
+* Scalable cloud infrastructure with reliable uptime
+* Environment variable management for secure authentication and API integrations
+
+### Live Demo
+
+🔗 **Application URL:** `https://your-domain.com`
+
+---
 
 ## 🛠️ Tech Stack
 
