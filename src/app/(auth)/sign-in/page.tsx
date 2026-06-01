@@ -51,7 +51,9 @@ export default function SignInForm() {
         });
       }
     }
-    if (result?.url) {
+    
+    // FIX: Use result?.ok instead of result?.url
+    if (result?.ok) {
       router.replace('/dashboard');
     }
   };
